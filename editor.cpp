@@ -13,12 +13,14 @@ textEditor::textEditor(QWidget *parent)
   QPixmap newpix("Resources/new.png");
   QPixmap openpix("Resources/open.png");
   QPixmap quitpix("Resources/quit.png");
+  QPixmap savepix("Resources/save.png");
 
   QToolBar *toolbar = addToolBar("main toolbar");
   toolbar->addAction(QIcon(newpix), "New File");
   toolbar->addAction(QIcon(openpix), "Open File");
+  toolbar->addAction(QIcon(savepix), "Save File");
   toolbar->addSeparator();
-  
+  toolbar->addSeparator();
   QAction *quit2 = toolbar->addAction(QIcon(quitpix), 
       "Quit Application");
   connect(quit2, SIGNAL(triggered()), qApp, SLOT(quit()));
