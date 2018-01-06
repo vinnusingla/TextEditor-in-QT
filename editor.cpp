@@ -36,9 +36,11 @@ void textEditor::saveFile(){
 	QString x = edit->toPlainText();
 	// debug(x);	
 	if(fileName.isEmpty()){
+		if(x.isEmpty())return;
 		fileName = QFileDialog::getSaveFileName(this,
 			        tr("Save File"), "" ,
 			        tr("All Files (*)"));
+		if(fileName.isNull())return;
 	}
 	QFile file(fileName);
 	if (file.open(QIODevice::WriteOnly)){
