@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QFileDialog>
 
 textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
         
@@ -15,17 +16,19 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
   QPixmap quitpix("Resources/quit.png");
   QPixmap savepix("Resources/save.png");
 
-  fileName="test.txt";
-  // filename="";
+  // fileName="test.txt";
+  fileName="";
   edit = new QTextEdit(this);  
 
   QToolBar *toolbar = addToolBar("main toolbar");
   toolbar->addAction(QIcon(newpix), "New File");
   toolbar->addAction(QIcon(openpix), "Open File");
-  QAction *save = toolbar->addAction(QIcon(savepix), "Save File");
+  QAction *save = toolbar->addAction(QIcon(savepix),
+  				"Save File");
   toolbar->addSeparator();
   toolbar->addSeparator();
-  QAction *quit = toolbar->addAction(QIcon(quitpix), "Quit Application");
+  QAction *quit = toolbar->addAction(QIcon(quitpix), 
+  				"Quit Application");
 
   connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
   connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
@@ -40,22 +43,17 @@ void textEditor::saveFile(){
 	// std::string s = x.toUtf8().constData();
 	// std::cout<<s<<std::endl;
 	if(fileName.isEmpty()){
-		//open a box to take file name as input
-		//if file name already exists tell user that prv. file will be overwrited 
-		//unless he changes the name
-		//save the file with the contents
-		// std::cin>>fileName;
+		fileName = QFileDialog::getSaveFileName(this,
+			        tr("Enter File Name"), "",
+			        tr("All Files (*)"));
+	}
+	QFile file(fileName);
+	if (file.open(QIODevice::WriteOnly)){
+		QTextStream out(&file);
+		out<<x;
 	}
 	else{
-		QFile file(fileName);
-		if (file.open(QIODevice::WriteOnly)){
-			QTextStream out(&file);
-			out<<x;
-		}
-		else{
-			qWarning("Could not open file");
-		}
-		file.close();
+		qWarning("Could not open file");
 	}
-
+	file.close();
 }
