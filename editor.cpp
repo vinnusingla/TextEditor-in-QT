@@ -1,3 +1,4 @@
+#pragma once
 #include "Library/library.cpp"
 
 textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
@@ -6,6 +7,7 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
   QPixmap openpix("Resources/open.png");
   QPixmap quitpix("Resources/quit.png");
   QPixmap savepix("Resources/save.png");
+  QPixmap rightpix("Resources/right.png");
 
   // fileName="test.txt";
   fileName="";
@@ -20,12 +22,17 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
   				"Save File");
   toolbar->addSeparator();
   toolbar->addSeparator();
+  QAction *right = toolbar->addAction(QIcon(rightpix),
+  				"Shift Screen to Right");
+  toolbar->addSeparator();
+  toolbar->addSeparator();
   QAction *quit = toolbar->addAction(QIcon(quitpix), 
   				"Quit Application");
 
   connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
   connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
   connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
+  connect(right, SIGNAL(triggered()), this, SLOT(shiftRight()));
   
   setCentralWidget(edit);
 
@@ -93,3 +100,19 @@ void textEditor::openFile(){
 	}
 	file.close();
 }
+
+void textEditor::shiftRight(){
+	QDesktopWidget *screen = QApplication::desktop();
+	int height = screen->height();
+	int width = screen->width()/2;
+	debug(height);
+	debug(width);
+	// this->lower();
+	this->setWindowState(this->windowState() ^ Qt::WindowActive);
+  	this->resize(width, height);
+  	this->move(width,0);
+}
+
+// void toggleFullScreen(){
+// 	this->setWindowState(this->windowState() ^ Qt::WindowFullScreen);
+// }

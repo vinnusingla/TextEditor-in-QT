@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <QTextEdit>
-#include <bits/stdc++.h>
 
 class textEditor : public QMainWindow {
     
@@ -16,6 +15,7 @@ class textEditor : public QMainWindow {
   private slots:
   	void saveFile();
   	void openFile();
+  	void shiftRight();
 
   private:	
   	QTextEdit* edit;

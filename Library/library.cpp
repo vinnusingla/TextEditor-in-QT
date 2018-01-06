@@ -1,3 +1,4 @@
+#pragma once
 #include "editor.h"
 #include <QToolBar>
 #include <QIcon>
@@ -10,12 +11,16 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <bits/stdc++.h>
+#include <QDesktopWidget>
 
 //helps to  print in console
 void debug (QString x){
 	std::string s = x.toUtf8().constData();
 	std::cout<<s<<std::endl;
 	return;
+}
+void debug(int x){
+	std::cout<<x<<std::endl;
 }
 
 //A pop up asking for yes/no response
