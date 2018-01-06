@@ -15,6 +15,7 @@ class textEditor : public QMainWindow {
 
   private slots:
   	void saveFile();
+  	void openFile();
 
   private:	
   	QTextEdit* edit;

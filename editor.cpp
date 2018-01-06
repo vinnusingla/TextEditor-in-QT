@@ -1,13 +1,4 @@
-#include "editor.h"
-#include <QToolBar>
-#include <QIcon>
-#include <QFile>
-#include <QTextStream>
-#include <QAction>
-#include <QMenu>
-#include <QMenuBar>
-#include <QStatusBar>
-#include <QFileDialog>
+#include "Library/library.cpp"
 
 textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
         
@@ -21,8 +12,10 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
   edit = new QTextEdit(this);  
 
   QToolBar *toolbar = addToolBar("main toolbar");
-  toolbar->addAction(QIcon(newpix), "New File");
-  toolbar->addAction(QIcon(openpix), "Open File");
+  QAction *neww = toolbar->addAction(QIcon(newpix),
+  				"New File");
+  QAction *open = toolbar->addAction(QIcon(openpix), 
+  				"Open File");
   QAction *save = toolbar->addAction(QIcon(savepix),
   				"Save File");
   toolbar->addSeparator();
@@ -32,6 +25,7 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 
   connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
   connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
+  connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
   
   setCentralWidget(edit);
 
@@ -40,17 +34,57 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 
 void textEditor::saveFile(){
 	QString x = edit->toPlainText();
-	// std::string s = x.toUtf8().constData();
-	// std::cout<<s<<std::endl;
+	// debug(x);	
 	if(fileName.isEmpty()){
 		fileName = QFileDialog::getSaveFileName(this,
-			        tr("Enter File Name"), "",
+			        tr("Save File"), "" ,
 			        tr("All Files (*)"));
 	}
 	QFile file(fileName);
 	if (file.open(QIODevice::WriteOnly)){
 		QTextStream out(&file);
 		out<<x;
+	}
+	else{
+		qWarning("Could not open file");
+	}
+	file.close();
+}	
+
+void textEditor::openFile(){
+	QString x = edit->toPlainText();
+	bool needToSave = false;
+	if(fileName.isEmpty() and !x.isEmpty())
+		needToSave = true;
+	else if(!fileName.isEmpty()) {
+		QFile file(fileName);
+		if (file.open(QIODevice::ReadOnly)){
+			QTextStream in(&file);
+			QString y = in.readAll();
+			// debug(x);
+			// debug(y);
+			if(x!=y)
+				needToSave = true;		
+		}
+		else{
+			qWarning("Could not open file");
+			file.close();
+			return;	
+		}
+	}
+	if(needToSave){
+		//pop a window asking if they want to save
+		if(yesNoPopUp(this,"Do You Want to Save Current File?"))
+			this->saveFile();	
+	}
+	fileName = QFileDialog::getOpenFileName(this,
+	        tr("Open File"), "" ,
+	        tr("All Files (*)"));
+	if(fileName.isNull())return;
+	QFile file(fileName);
+	if (file.open(QIODevice::ReadOnly)){
+		QTextStream in(&file);
+		edit->setPlainText(in.readAll());
 	}
 	else{
 		qWarning("Could not open file");
