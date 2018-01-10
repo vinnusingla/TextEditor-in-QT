@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
 	int width = screen->width();
 	textEditor window;
 	window.setWindowTitle("Personal Editor");
+	window.setWindowIcon(QIcon("Resources/icon.png"));
 	// window.setGeometry()
 	window.resize(width, height);
 	window.show();
