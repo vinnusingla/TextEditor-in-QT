@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <bits/stdc++.h>
 #include <QDesktopWidget>
+#include <QScreen>
 
 //helps to  print in console
 void debug (QString x){

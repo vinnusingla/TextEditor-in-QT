@@ -34,6 +34,10 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
   connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
   connect(right, SIGNAL(triggered()), this, SLOT(shiftRight()));
   
+  quit->setShortcut(tr("CTRL+Q"));
+  save->setShortcut(tr("CTRL+S"));
+  open->setShortcut(tr("CTRL+O"));
+
   setCentralWidget(edit);
 
   statusBar()->showMessage("Ready");
@@ -108,7 +112,9 @@ void textEditor::shiftRight(){
 	debug(height);
 	debug(width);
 	// this->lower();
-	this->setWindowState(this->windowState() ^ Qt::WindowActive);
+	// this->setWindowState(this->windowState() ^ Qt::WindowActive);
+	// this->lower();
+		
   	this->resize(width, height);
   	this->move(width,0);
 }
