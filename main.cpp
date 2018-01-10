@@ -11,7 +11,9 @@ int main(int argc, char *argv[]) {
 	window.setWindowTitle("Personal Editor");
 	window.setWindowIcon(QIcon("Resources/icon.png"));
 	// window.setGeometry()
-	window.resize(width, height);
+	window.resize(width/2, height);
+	window.show();
+	window.resize(width	, height);
 	window.show();
 
 	return app.exec();
