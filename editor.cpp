@@ -2,17 +2,19 @@
 #include "Library/library.cpp"
 
 textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	QPixmap newpix("Resources/new.png");
 	QPixmap openpix("Resources/open.png");
 	QPixmap quitpix("Resources/quit.png");
 	QPixmap savepix("Resources/save.png");
 	QPixmap rightpix("Resources/right.png");
-
-	// fileName="test.txt";
+	QPixmap fullpix("Resources/full.png");
+	QPixmap leftpix("Resources/left.png");
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	fileName="";
 	edit = new QTextEdit(this);  
-
 	QToolBar *toolbar = addToolBar("main toolbar");
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	QAction *neww = toolbar->addAction(QIcon(newpix),
 					"New File");
 	QAction *open = toolbar->addAction(QIcon(openpix), 
@@ -21,28 +23,32 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 					"Save File");
 	toolbar->addSeparator();
 	toolbar->addSeparator();
+	QAction *left = toolbar->addAction(QIcon(leftpix),
+					"Shift Screen to Left");
+	toolbar->addSeparator();
+	QAction *full = toolbar->addAction(QIcon(fullpix),
+					"Full Screen");
+	toolbar->addSeparator();
 	QAction *right = toolbar->addAction(QIcon(rightpix),
 					"Shift Screen to Right");
 	toolbar->addSeparator();
 	toolbar->addSeparator();
 	QAction *quit = toolbar->addAction(QIcon(quitpix), 
 					"Quit Application");
-
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
 	connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
 	connect(right, SIGNAL(triggered()), this, SLOT(shiftRight()));
-
+	connect(left, SIGNAL(triggered()), this, SLOT(shiftLeft()));
+	connect(full, SIGNAL(triggered()), this, SLOT(toggleFullScreen()));
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	quit->setShortcut(tr("CTRL+Q"));
 	save->setShortcut(tr("CTRL+S"));
 	open->setShortcut(tr("CTRL+O"));
-
-	// QMenu *file;
- //  file = menuBar()->addMenu("&File");
- //  file->addAction(quit);
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	setCentralWidget(edit);
-
 	statusBar()->showMessage("Ready");
 }
 
@@ -111,14 +117,21 @@ void textEditor::openFile(){
 void textEditor::shiftRight(){
 	QDesktopWidget *screen = QApplication::desktop();
 	int height = screen->height();
-	int width = screen->width()/2;
-	debug(height);
-	debug(width);	
-  	this->resize(width, height);
-  	this->move(width,0);
-  	this->show();
+	int width = screen->width()/2;	
+  	this->setGeometry(width,0,width,height);
+	// debug(this->y());
+	// debug(this->x());
 }
 
-// void toggleFullScreen(){
-// 	this->setWindowState(this->windowState() ^ Qt::WindowFullScreen);
-// }
+void textEditor::shiftLeft(){
+	QDesktopWidget *screen = QApplication::desktop();
+	int height = screen->height();
+	int width = screen->width()/2;
+	this->setGeometry(0,0,width,height);
+	// debug(this->x());
+	// debug(this->y());
+}
+
+void textEditor::toggleFullScreen(){
+	this->setWindowState(this->windowState() ^ Qt::WindowFullScreen);
+}

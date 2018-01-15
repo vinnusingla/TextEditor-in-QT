@@ -16,6 +16,8 @@ class textEditor : public QMainWindow {
   	void saveFile();
   	void openFile();
   	void shiftRight();
+    void shiftLeft();
+    void toggleFullScreen();
 
   private:	
   	QTextEdit* edit;

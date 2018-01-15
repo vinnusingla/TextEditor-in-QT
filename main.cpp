@@ -10,10 +10,7 @@ int main(int argc, char *argv[]) {
 	textEditor window;
 	window.setWindowTitle("Personal Editor");
 	window.setWindowIcon(QIcon("Resources/icon.png"));
-	// window.setGeometry()
-	window.resize(width/2, height);
-	window.show();
-	window.resize(width	, height);
+	window.setGeometry(0,0,width,height);
 	window.show();
 
 	return app.exec();
