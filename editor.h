@@ -6,20 +6,21 @@
 #include <QTextEdit>
 
 class textEditor : public QMainWindow {
-    
-  Q_OBJECT  
 
-  public:
-  	textEditor(QWidget *parent = 0);
+	Q_OBJECT  
 
-  private slots:
-  	void saveFile();
-  	void openFile();
-  	void shiftRight();
-    void shiftLeft();
-    void toggleFullScreen();
+	public:
+		textEditor(QWidget *parent = 0);
 
-  private:	
-  	QTextEdit* edit;
-  	QString fileName;
+	private slots:
+		void newFile();
+		void saveFile();
+		void openFile();
+		void shiftRight();
+		void shiftLeft();
+		void toggleFullScreen();
+
+	private:	
+		QTextEdit* edit;
+		QString fileName;
 };

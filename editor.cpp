@@ -1,6 +1,7 @@
 #pragma once
 #include "Library/library.cpp"
 
+//-----------------------------------------------------------------------------------------------------------------//
 textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	QPixmap newpix("Resources/new.png");
@@ -38,6 +39,7 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	connect(save, SIGNAL(triggered()), this, SLOT(saveFile()));
+	connect(neww, SIGNAL(triggered()), this, SLOT(newFile()));
 	connect(open, SIGNAL(triggered()), this, SLOT(openFile()));
 	connect(right, SIGNAL(triggered()), this, SLOT(shiftRight()));
 	connect(left, SIGNAL(triggered()), this, SLOT(shiftLeft()));
@@ -51,6 +53,42 @@ textEditor::textEditor(QWidget *parent) : QMainWindow(parent) {
 	setCentralWidget(edit);
 	statusBar()->showMessage("Ready");
 }
+//-----------------------------------------------------------------------------------------------------------------//
+void textEditor::newFile(){
+	QString x = edit->toPlainText();
+	bool needToSave = false;
+	if(fileName.isEmpty() and !x.isEmpty())
+		needToSave = true;
+	else if(!fileName.isEmpty()) {
+		QFile file(fileName);
+		if (file.open(QIODevice::ReadOnly)){
+			QTextStream in(&file);
+			QString y = in.readAll();
+			// debug(x);
+			// debug(y);
+			if(x!=y)
+				needToSave = true;		
+		}
+		else{
+			qWarning("Could not open file");
+			file.close();
+			return;	
+		}
+	}
+	if(needToSave){
+		//pop a window asking if they want to save
+		int res = yesNoPopUp(this,"Do You Want to Save Current File?");
+		if(res == 1)
+			this->saveFile();
+		else if(res==3)
+			return;	
+		debug(res);
+	}
+	edit->setPlainText("");
+	fileName = "";
+	statusBar()->showMessage("New File Opened ");
+}
+
 
 void textEditor::saveFile(){
 	QString x = edit->toPlainText();
@@ -71,6 +109,7 @@ void textEditor::saveFile(){
 		qWarning("Could not open file");
 	}
 	file.close();
+	statusBar()->showMessage("File Saved ");
 }	
 
 void textEditor::openFile(){
@@ -96,8 +135,11 @@ void textEditor::openFile(){
 	}
 	if(needToSave){
 		//pop a window asking if they want to save
-		if(yesNoPopUp(this,"Do You Want to Save Current File?"))
-			this->saveFile();	
+		int res = yesNoPopUp(this,"Do You Want to Save Current File?");
+		if(res == 1)
+			this->saveFile();
+		else if(res==3)
+			return;	
 	}
 	fileName = QFileDialog::getOpenFileName(this,
 	        tr("Open File"), "" ,
@@ -112,6 +154,7 @@ void textEditor::openFile(){
 		qWarning("Could not open file");
 	}
 	file.close();
+	statusBar()->showMessage("Opened '"+fileName+"' File");
 }
 
 void textEditor::shiftRight(){

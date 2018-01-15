@@ -25,14 +25,15 @@ void debug(int x){
 }
 
 //A pop up asking for yes/no response
-bool yesNoPopUp(QWidget* parent , QString label){
+int yesNoPopUp(QWidget* parent , QString label){
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(parent, "", label,
-		QMessageBox::No|QMessageBox::Yes,QMessageBox::Yes);
+		QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,QMessageBox::Yes);
 	if (reply == QMessageBox::Yes) {
-		return true;
+		return 1;
 	}
-	else {
-		return false;
+	else if(reply == QMessageBox::No){
+		return 2;
 	}	
+	else return 3;
 }
